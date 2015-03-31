@@ -1,7 +1,7 @@
 
 # This script reads AmeriFlux L2 gap filled files and calculates aggregated NEE for daily (g C/m2/day), monthly (g C/m2/day) and annual (g C/m2/year). 
 # The L2 files should contain data for the whole year.
-# Author: Francesc Montané
+# Author: Francesc Montane
 
 # modify working directory and "filepath"
 # set working directory
