@@ -6,10 +6,9 @@
 # modify working directory and "filepath"
 # set working directory
 
-setwd("D:/Sites_DOE/AmeriFlux/Morgan Monroe State Forest/L2_gap_filled")
-filepath= "D:/Sites_DOE/AmeriFlux/Morgan Monroe State Forest/L2_gap_filled/"
 
-
+setwd("D:/Sites_DOE/AmeriFlux/Niwot Ridge/L2_gap_filled/V008")
+filepath= "D:/Sites_DOE/AmeriFlux/Niwot Ridge/L2_gap_filled/V008/"
 
 # read all the .csv files in the working directory
 
@@ -37,9 +36,11 @@ temp <- (myfiles[,] == -9999 | myfiles[,] == -6999)
 myfiles[temp]=NA
 
 
-
-
-# aggregated NEE daily
+#########################
+#########################
+# aggregated NEE daily  #
+#########################
+#########################
 
 year<-unique(myfiles$YEAR)
 
@@ -108,9 +109,11 @@ data_daily<-agg_NEE_day[need_vars_d]
 
 write.table(data_daily, paste(site,"L2gapfilled_NEE_daily.txt",sep="_"),col.names=TRUE,row.names=FALSE)
 
-
-
-# aggregated NEE monthly
+###########################
+###########################
+# aggregated NEE monthly  #
+###########################
+###########################
 
 # get minimum and maximum for years in the data
 
@@ -145,29 +148,17 @@ data_monthly<-agg_NEE_month[need_vars_m]
 
 write.table(data_monthly, paste(site,"L2gapfilled_NEE_monthly.txt",sep="_"),col.names=TRUE,row.names=FALSE)
 
+#########################
+#########################
+# aggregated NEE annual #
+#########################
+#########################
 
-# aggregated NEE annual
+agg_NEE_year<-aggregate(myfiles$NEE_gCm2,by=list(myfiles$YEAR),sum)
+names(agg_NEE_year)<-c("year","agg_NEE_year")
 
-agg_NEE_year<-aggregate(agg_NEE_month$agg_NEE_month,by=list(agg_NEE_month$year),mean)
-names(agg_NEE_year)<-c("month_class","agg_NEE_year")
+data_annual<-agg_NEE_year
 
-
-agg_NEE_year<-cbind(agg_NEE_year,day_year)
-
-
-agg_NEE_year<-transform(agg_NEE_year, agg_NEE_year_units = agg_NEE_year * day_year)
-
-
-years_years<-data.frame(c(year_min:year_max))
-names(years_years)<-c("year")
-
-agg_NEE_year<-cbind(years_years,agg_NEE_year)
-
-#  select only the needed variables to create a txt file with agregated NEE annual values with units g C/m2/year
-
-need_vars_y<-c("year", "agg_NEE_year_units")
-data_annual<-agg_NEE_year[need_vars_y]
-names(data_annual)<-c("year","agg_NEE_year")
 
 
 write.table(data_annual, paste(site,"L2gapfilled_NEE_annual.txt",sep="_"),col.names=TRUE,row.names=FALSE)
