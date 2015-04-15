@@ -1,5 +1,5 @@
 
-# This script reads AmeriFlux L2 gap filled files and calculates aggregated NEE for daily (g C/m2/day), monthly (g C/m2/day) and annual (g C/m2/year). 
+# This script reads AmeriFlux L2 gap filled files and calculates aggregated NEE for daily (g C/m2/day), monthly (using two different units: g C/m2/day and gC/m2/month) and annual (g C/m2/year). 
 # The L2 files should contain data for the whole year.
 # Author: Francesc Montane
 
@@ -115,6 +115,7 @@ write.table(data_daily, paste(site,"L2gapfilled_NEE_daily.txt",sep="_"),col.name
 ###########################
 ###########################
 
+#calculate aggregated NEE monthly with two different units: gC/m2/day and gC/m2/month
 # get minimum and maximum for years in the data
 
 year_min<-min(myfiles$YEAR)
@@ -147,6 +148,20 @@ need_vars_m<-c("year", "month", "agg_NEE_month")
 data_monthly<-agg_NEE_month[need_vars_m]
 
 write.table(data_monthly, paste(site,"L2gapfilled_NEE_monthly.txt",sep="_"),col.names=TRUE,row.names=FALSE)
+
+# aggegate monthly NEE but using units gC/m2/month (instead of gC/m2/day)
+
+agg_NEE_month_gCmonth<-aggregate(agg_NEE_day$agg_NEE_day,by=list(agg_NEE_day$seqdates_Y_m),sum)
+names(agg_NEE_month_gCmonth)<-c("month_class","agg_NEE_month_gCmonth")
+
+agg_NEE_month_gCmonth<-cbind(year_monthly_month,month_monthly_month,agg_NEE_month_gCmonth)
+
+need_vars_m<-c("year", "month", "agg_NEE_month_gCmonth")
+data_monthly_gCmonth<-agg_NEE_month_gCmonth[need_vars_m]
+
+write.table(data_monthly_gCmonth, paste(site,"L2gapfilled_NEE_monthly_gCmonth.txt",sep="_"),col.names=TRUE,row.names=FALSE)
+
+
 
 #########################
 #########################
